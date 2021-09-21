@@ -45,12 +45,22 @@ from example_model import ExampleModel
 # Check https://docs.runwayapp.ai/#/python-sdk to see a complete list of
 # supported configs. The setup function should return the model ready to be
 # used.
+
+# runway_model.py
+@runway.setup(options={'checkpoint': runway.file(extension='.pkl')})
+def setup(opts):
+   checkpoint_path = opts['checkpoint']
+   model = load_model_from_checkpoint(checkpoint_path)
+   # ...
+
 setup_options = {
     'truncation': number(min=1, max=10, step=1, default=5, description='Example input.'),
     'seed': number(min=0, max=1000000, description='A seed used to initialize the model.')
 }
-@runway.setup(options=setup_options)
+@runway.setup(options={'checkpoint': runway.file(extension='.pkl')})
 def setup(opts):
+    checkpoint_path = opts['checkpoint']
+    model = load_model_from_checkpoint(checkpoint_path)
     msg = '[SETUP] Ran with options: seed = {}, truncation = {}'
     print(msg.format(opts['seed'], opts['truncation']))
     model = ExampleModel(opts)
